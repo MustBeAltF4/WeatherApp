@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>Weather App</h1>
+
+<form>
+    <label for="city_input">Enter your city:</label><br>
+    <input type="text" id="city_input" name="city"><br><br>
+    <button type="submit" id="get_weather_button">Get current weather</button>
+</form>
+
+<p id="weather_data"></p>
+
+<script>
+    $(document).ready(function () {
+        $("form").submit(function (event) {
+            event.preventDefault();
+
+            var city = $("#city_input").val();
+            if (city !== "") {
+                $("#weather_data").html("Loading...");
+
+                $.getJSON("/weather_db?city=" + city, function (data) {
+                    var temperature = data.current.temp_c;
+                    var humidity = data.current.humidity;
+                    var wind_speed = data.current.wind_kph;
+                    var date = data.current.last_updated;
+
+                    var output = "<strong>" + city + "</strong><br>";
+                    output += "Temperature: " + temperature + " °C<br>";
+                    output += "Humidity: " + humidity + "%<br>";
+                    output += "Wind speed: " + wind_speed + " km/h<br>";
+                    output += "Last update: " + date + "<br><br>";
+
+                    $("#weather_data").html(output);
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
